@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: masded_inventory_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: inventory
+      POSTGRES_PASSWORD: inventory_secret
+    volumes:
+      - inventory_pgdata:/var/lib/postgresql/data
+      - ./sql/001_schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory -d inventory_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: masded_inventory_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      JWT_SECRET: CHANGE_THIS_TO_A_LONG_RANDOM_SECRET
+      DATABASE_URL: postgresql://inventory:inventory_secret@db:5432/inventory_db
+      DB_SSL: "false"
+      PASSWORD_RESET_CODE: CHANGE_ME_TO_A_PRIVATE_RESET_CODE
+    ports:
+      - "3000:3000"
+
+volumes:
+  inventory_pgdata:

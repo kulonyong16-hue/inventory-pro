@@ -1,0 +1,14 @@
+PERBAIKAN DASHBOARD MAS-DED INVENTORY PRO
+
+Perubahan: daftar “Stok Menipis / Kosong” sekarang menampilkan SEMUA barang aktif dengan stok <= 5 unit, bukan hanya 8 baris pertama. Pengurutan dari stok paling rendah. Data database tidak dihapus atau diubah oleh perbaikan ini.
+
+CARA MEMASANG:
+1. Ekstrak ZIP ini ke folder baru.
+2. Buka folder inventory_pro di dalamnya.
+3. Pastikan Docker Desktop berjalan.
+4. Klik dua kali start-windows.bat. Perintah ini membangun ulang image aplikasi dan menjalankan container.
+5. Setelah browser terbuka, tekan Ctrl+F5 untuk memuat ulang halaman.
+
+PENTING: Jangan jalankan docker compose down -v dan jangan hapus volume inventory_pgdata. Itu dapat menghapus database.
+
+Catatan: “Stok menipis/kosong” ditentukan sebagai stok akhir <= 5 unit. Barang dengan stok > 5 tidak termasuk daftar ini.
